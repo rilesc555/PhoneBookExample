@@ -11,7 +11,7 @@ public class ContactView extends JFrame {
 
 	// create component references
 	private JTextField txtFirstname, txtLastname, txtPhoneNumber;
-	private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnLogout;
+	private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnLogout, btnRefresh, btnExport;
 	private JList<String> contactList;
 	
 	private final DefaultListModel<String> listModel;
@@ -20,7 +20,15 @@ public class ContactView extends JFrame {
 	public ContactView() {
 
 		setTitle("Phonebook");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Exit", JOptionPane.YES_NO_OPTION);
+				if(option == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				}
+			}
+		});
 		
 
 		// initialize the components
@@ -35,9 +43,14 @@ public class ContactView extends JFrame {
 		btnDelete = new JButton("Delete");
 		btnSearch = new JButton("Search");
 		btnLogout = new JButton("Logout");
+		btnRefresh = new JButton("Refresh");
+		btnExport = new JButton("Export");
 		contactList = new JList<String>();
 		contactList.setModel(listModel);
-		
+
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+
 		// input panel
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new GridLayout(4, 2));
@@ -50,9 +63,11 @@ public class ContactView extends JFrame {
 		inputPanel.add(btnAdd);
 		inputPanel.add(btnUpdate);
 		
-		// list panel
-		JPanel listPanel = new JPanel(new GridLayout(2, 1));
+		// list panel with scroll pane and label that stays close to jscrollpane
+		JPanel listPanel = new JPanel();
+		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		listPanel.add(new JLabel("Contact list"));
+		listPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		listPanel.add(new JScrollPane(getContactList()));
 		
 		
@@ -61,12 +76,32 @@ public class ContactView extends JFrame {
 		buttonPanel.add(btnSearch);
 		buttonPanel.add(btnDelete);
 		buttonPanel.add(btnLogout);
+		buttonPanel.add(btnRefresh);
+		buttonPanel.add(btnExport);
 		
-		// add panel to the window
+		/*// add panel to the window
 		setLayout(new BorderLayout());
 		add(inputPanel, BorderLayout.NORTH);
 		add(listPanel, BorderLayout.CENTER);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(buttonPanel, BorderLayout.SOUTH);*/
+
+		gbc.weightx = 1;
+		gbc.fill = GridBagConstraints.BOTH;
+
+		gbc.weighty = 0.3;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		add(inputPanel, gbc);
+
+		gbc.weighty = 0.4;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		add(listPanel, gbc);
+
+		gbc.weighty = 0.3;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		add(buttonPanel, gbc);
 		
 		// getContacts(loadContacts());
 		
@@ -97,6 +132,14 @@ public class ContactView extends JFrame {
 	
 	public void addContactListListener(ListSelectionListener listener) {
 		contactList.addListSelectionListener(listener);
+	}
+
+	public void addRefreshButtonListener(ActionListener listener) {
+		btnRefresh.addActionListener(listener);
+	}
+
+	public void addExportButtonListener(ActionListener listener) {
+		btnExport.addActionListener(listener);
 	}
 	
 	// getters
@@ -137,10 +180,13 @@ public class ContactView extends JFrame {
 	}
 	
 	public JList<String> getContactList(){
-		
 		return contactList;
 	}
-	
+
+	public String getSearch() {
+		return JOptionPane.showInputDialog("");
+	}
+
 //	private List<Contact> loadContacts() {
 //		
 //		ContactDataAccess data = new ContactDataAccess();

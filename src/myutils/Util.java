@@ -1,7 +1,12 @@
 package myutils;
 
+import models.Contact;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.security.*;
+import java.util.List;
 
 public class Util {
 
@@ -25,6 +30,21 @@ public class Util {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	public static boolean exportToCSV(String filename, List<Contact> contacts) {
+		try {
+			FileWriter writer = new FileWriter(filename);
+			writer.write("First Name,Last Name,Phone Number\n");
+			for(Contact contact : contacts) {
+				writer.write(contact.getFirstName() + "," + contact.getLastName() + "," + contact.getPhoneNumber() + "\n");
+			}
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 }

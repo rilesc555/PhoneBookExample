@@ -23,12 +23,17 @@ public class RegisterController {
 				user.setUsername(registerView.getUsername());
 				user.setPassword(registerView.getPassword());
 				
-				// UserDataAccess uda = new UserDataAccess();
-				
-				if(new UserDataAccess().registerUser(user))
-					JOptionPane.showMessageDialog(null, "Registered successfully");
+				if(new UserDataAccess().registerUser(user)) {
+					JOptionPane.showMessageDialog(null, "Registered successfully. Returning to login page");
+					registerView.setVisible(false);
+					registerView.dispose();
+
+					LoginView lv = new LoginView();
+					LoginController lc = new LoginController(lv);
+					lv.setVisible(true);
+				}
 				else
-					JOptionPane.showMessageDialog(null, "Registeration failed");
+					JOptionPane.showMessageDialog(null, "Registration failed");
 				
 			}
 		});
@@ -37,13 +42,16 @@ public class RegisterController {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				registerView.setVisible(false);
+				registerView.dispose();
+
 				LoginView lv = new LoginView();
 				LoginController lc = new LoginController(lv);
 				
 				// lv.setLocationRelativeTo(null);
 				lv.setVisible(true);
 				
-				registerView.setVisible(false);
+
 			}
 		});
 	}

@@ -22,6 +22,7 @@ public class LoginController {
 //				rv.setVisible(true);
 //				
 				loginView.setVisible(false);
+				loginView.dispose();
 				
 				RegisterView rv = new RegisterView();
 				RegisterController rc = new RegisterController(rv);

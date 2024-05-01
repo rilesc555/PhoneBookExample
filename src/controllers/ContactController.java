@@ -1,9 +1,10 @@
 package controllers;
 
+import myutils.Util;
 import views.*;
 import java.awt.event.*;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 
 import models.*;
@@ -22,13 +23,13 @@ public class ContactController {
 		
 		contactView.addAddButtonListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				// create an object of a contact
 				Contact contact = new Contact();
 				contact.setFirstName(contactView.getFirstName());
 				contact.setLastName(contactView.getLastName());
 				contact.setPhoneNumber(contactView.getPhoneNumber());
-				
+
 				ContactDataAccess contactData = new ContactDataAccess();
 				if(contactData.addContact(contact)) {
 					JOptionPane.showMessageDialog(null, "Contact added successfully");
@@ -83,6 +84,47 @@ public class ContactController {
 				lv.setVisible(true);
 				new LoginController(lv);
 				
+			}
+		});
+
+		contactView.addDeleteButtonListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Contact contact = getSelectedContact();
+
+				if(contact != null) {
+					if(new ContactDataAccess().deleteContact(contact)) {
+						updateContactList();
+						JOptionPane.showMessageDialog(null, "Contact deleted successfully");
+					}
+				}
+			}
+		});
+
+		contactView.addSearchButtonListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String search = contactView.getSearch();
+
+				List<Contact> contacts = new ContactDataAccess().searchContact(search);
+
+				contactView.setContactsToModel(contacts);
+			}
+		});
+
+		contactView.addRefreshButtonListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateContactList();
+			}
+		});
+
+		contactView.addExportButtonListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String filename = JOptionPane.showInputDialog("Enter filename");
+				String csvName = filename + ".csv";
+				if (Util.exportToCSV(csvName, new ContactDataAccess().getContacts())) {
+					JOptionPane.showMessageDialog(null, "Contacts exported successfully");
+				} else {
+					JOptionPane.showMessageDialog(null, "Export failed");
+				}
 			}
 		});
 	}
