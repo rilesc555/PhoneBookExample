@@ -41,6 +41,7 @@ public class ContactView extends JFrame {
 
 		setContactTable(new JTable(tableModel));
 		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
+		contactTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		txtFirstname = new JTextField(20);
 		txtLastname = new JTextField(20);
