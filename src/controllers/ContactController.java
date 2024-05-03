@@ -19,7 +19,7 @@ public class ContactController {
 		
 		this.contactView = cv;
 		
-		updateContactList();
+		updateContactTable();
 		
 		contactView.addAddButtonListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40,7 +40,7 @@ public class ContactController {
 				ContactDataAccess contactData = new ContactDataAccess();
 				if(contactData.addContact(contact)) {
 					JOptionPane.showMessageDialog(null, "Contact added successfully");
-					updateContactList();
+					updateContactTable();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "An error occurred");
@@ -50,11 +50,11 @@ public class ContactController {
 		
 		contactView.addContactListListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				
-				Contact contact = getSelectedContact();
-				
-				if(contact != null) {
-					updateFields(contact);
+				if (!e.getValueIsAdjusting()) {
+					Contact contact = getSelectedContact();
+					if(contact != null) {
+						updateFields(contact);
+					}
 				}
 			}
 		});
@@ -74,7 +74,7 @@ public class ContactController {
 				contact.setPhoneNumber(pn);
 
 				if(new ContactDataAccess().updateContact(contact)) {
-					updateContactList();
+					updateContactTable();
 					JOptionPane.showMessageDialog(null, "contact update successfully");
 				}
 			}
@@ -100,7 +100,7 @@ public class ContactController {
 
 				if(contact != null) {
 					if(new ContactDataAccess().deleteContact(contact)) {
-						updateContactList();
+						updateContactTable();
 						JOptionPane.showMessageDialog(null, "Contact deleted successfully");
 					}
 				}
@@ -113,19 +113,19 @@ public class ContactController {
 
 				List<Contact> contacts = new ContactDataAccess().searchContact(search);
 
-				contactView.setContactsToModel(contacts);
+				contactView.setContactsToTableModel(contacts);
 			}
 		});
 
 		contactView.addRefreshButtonListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateContactList();
+				updateContactTable();
 			}
 		});
 
 		contactView.addExportButtonListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateContactList();
+				updateContactTable();
 				String filename = JOptionPane.showInputDialog("Enter filename");
 				String csvName = filename + ".csv";
 				if (Util.exportToCSV(csvName, new ContactDataAccess().getContacts())) {
@@ -137,22 +137,27 @@ public class ContactController {
 		});
 	}
 
-	private void updateContactList() {
+	private void updateContactTable() {
 		ContactDataAccess data = new ContactDataAccess();
 		
 		List<Contact> contacts = data.getContacts();
 			
-		contactView.setContactsToModel(contacts);
+		contactView.setContactsToTableModel(contacts);
 	}
 	
 	private Contact getSelectedContact() {
 		Contact contact = null;
 		
-		int row = contactView.getContactList().getSelectedIndex();
-		
+		int row = contactView.getContactTable().getSelectedRow();
+
 		if(row != -1) {
-			contact = new ContactDataAccess().getContacts().get(row);
+			contact = new Contact();
+			contact.setId((int) contactView.getContactTable().getValueAt(row, 0));
+			contact.setFirstName((String) contactView.getContactTable().getValueAt(row, 1));
+			contact.setLastName((String) contactView.getContactTable().getValueAt(row, 2));
+			contact.setPhoneNumber((String) contactView.getContactTable().getValueAt(row, 3));
 		}
+
 		return contact;
 	}
 	

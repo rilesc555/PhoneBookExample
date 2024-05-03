@@ -13,10 +13,10 @@ public class ContactView extends JFrame {
 	// create component references
 	private final JTextField txtFirstname, txtLastname, txtPhoneNumber;
 	private final JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnLogout, btnRefresh, btnExport;
-	private JList<String> contactList;
+	private JTable contactTable;
+	private final DefaultTableModel tableModel;
 	
-	private final DefaultListModel<String> listModel;
-	
+
 	// constructor
 	public ContactView() {
 
@@ -33,9 +33,15 @@ public class ContactView extends JFrame {
 		
 
 		// initialize the components
-		listModel = new DefaultListModel<>();
-		setContactList(new JList<>(listModel));
-		
+		tableModel = new DefaultTableModel() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		setContactTable(new JTable(tableModel));
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
+
 		txtFirstname = new JTextField(20);
 		txtLastname = new JTextField(20);
 		txtPhoneNumber = new JTextField(20);
@@ -46,8 +52,8 @@ public class ContactView extends JFrame {
 		btnLogout = new JButton("Logout");
 		btnRefresh = new JButton("Refresh");
 		btnExport = new JButton("Export");
-		contactList = new JList<String>();
-		contactList.setModel(listModel);
+		contactTable.setShowGrid(false);
+
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -69,9 +75,8 @@ public class ContactView extends JFrame {
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		listPanel.add(new JLabel("Contact list"));
 		listPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		listPanel.add(new JScrollPane(getContactList()));
-		
-		
+		listPanel.add(new JScrollPane(getContactTable()));
+
 		// buttons panel
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(btnSearch);
@@ -104,9 +109,6 @@ public class ContactView extends JFrame {
 		gbc.gridy = 2;
 		add(buttonPanel, gbc);
 		
-		// getContacts(loadContacts());
-		
-		
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -132,7 +134,7 @@ public class ContactView extends JFrame {
 	}
 	
 	public void addContactListListener(ListSelectionListener listener) {
-		contactList.addListSelectionListener(listener);
+		contactTable.getSelectionModel().addListSelectionListener(listener);
 	}
 
 	public void addRefreshButtonListener(ActionListener listener) {
@@ -166,41 +168,27 @@ public class ContactView extends JFrame {
 		return getPhoneNumberField().getText();
 	}
 	
-	public void setContactsToModel(List<Contact> contacts) {
+	public void setContactsToTableModel(List<Contact> contacts) {
 		
-		listModel.clear();
-		//listModel.addElement("Test");
+		tableModel.setRowCount(0);
+		tableModel.setColumnCount(3);
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
 
 		//Add first name, last name and phone number to the list model. Each column is set number of characters wide
 		for(Contact c : contacts) {
-			listModel.addElement(String.format("%-20s%-20s%-20s", c.getFirstName(), c.getLastName(), c.getPhoneNumber()));
+			tableModel.addRow(new String[] {c.getFirstName(), c.getLastName(), c.getPhoneNumber()});
 		}
 	}
-	
-	public void setContactList(JList<String> contactList) {
-		this.contactList = contactList;
+
+	public JTable getContactTable(){
+		return contactTable;
 	}
-	
-	public JList<String> getContactList(){
-		return contactList;
+
+	public void setContactTable(JTable contactTable) {
+		this.contactTable = contactTable;
 	}
 
 	public String getSearch() {
-		return JOptionPane.showInputDialog("");
+		return JOptionPane.showInputDialog("Contact or Phone number to search:");
 	}
-
-//	private List<Contact> loadContacts() {
-//		
-//		ContactDataAccess data = new ContactDataAccess();
-//		
-//		List<Contact> c = data.getContacts(UserDataAccess.currentUserId);
-//		return c;
-//	}
-	
-	
-	
-	
-	
-	
-	
 }
