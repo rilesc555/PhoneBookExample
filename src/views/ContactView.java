@@ -7,7 +7,6 @@ import javax.swing.event.*;
 import java.util.List;
 import models.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 public class ContactView extends JFrame {
 
@@ -41,9 +40,8 @@ public class ContactView extends JFrame {
 		};
 
 		setContactTable(new JTable(tableModel));
-		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number", "id"});
-		TableColumnModel tcm = contactTable.getColumnModel();
-		contactTable.removeColumn(tcm.getColumn(3));
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
+		contactTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		txtFirstname = new JTextField(20);
 		txtLastname = new JTextField(20);
@@ -174,14 +172,13 @@ public class ContactView extends JFrame {
 	public void setContactsToTableModel(List<Contact> contacts) {
 		
 		tableModel.setRowCount(0);
-		tableModel.setColumnCount(4);
-		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number", "id"});
+		tableModel.setColumnCount(3);
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
 
 		//Add first name, last name and phone number to the list model. Each column is set number of characters wide
 		for(Contact c : contacts) {
-			tableModel.addRow(new String[] {c.getFirstName(), c.getLastName(), c.getPhoneNumber(), String.valueOf(c.getId())});
+			tableModel.addRow(new String[] {c.getFirstName(), c.getLastName(), c.getPhoneNumber()});
 		}
-		contactTable.removeColumn(contactTable.getColumnModel().getColumn(3));
 	}
 
 	public JTable getContactTable(){
