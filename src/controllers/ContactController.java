@@ -55,7 +55,6 @@ public class ContactController {
 					if(contact != null) {
 						updateFields(contact);
 					}
-
 				}
 			}
 		});
