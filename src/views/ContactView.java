@@ -6,12 +6,13 @@ import java.awt.event.*;
 import javax.swing.event.*;
 import java.util.List;
 import models.*;
+import javax.swing.table.DefaultTableModel;
 
 public class ContactView extends JFrame {
 
 	// create component references
-	private JTextField txtFirstname, txtLastname, txtPhoneNumber;
-	private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnLogout, btnRefresh, btnExport;
+	private final JTextField txtFirstname, txtLastname, txtPhoneNumber;
+	private final JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnLogout, btnRefresh, btnExport;
 	private JList<String> contactList;
 	
 	private final DefaultListModel<String> listModel;
@@ -169,9 +170,10 @@ public class ContactView extends JFrame {
 		
 		listModel.clear();
 		//listModel.addElement("Test");
-		
-		for(Contact c: contacts) {
-			listModel.addElement(c.getFirstName() +"\t\t"+c.getLastName()+"\t\t - "+c.getPhoneNumber());
+
+		//Add first name, last name and phone number to the list model. Each column is set number of characters wide
+		for(Contact c : contacts) {
+			listModel.addElement(String.format("%-20s%-20s%-20s", c.getFirstName(), c.getLastName(), c.getPhoneNumber()));
 		}
 	}
 	

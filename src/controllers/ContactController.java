@@ -28,6 +28,13 @@ public class ContactController {
 				Contact contact = new Contact();
 				contact.setFirstName(contactView.getFirstName());
 				contact.setLastName(contactView.getLastName());
+				String phoneNumber = contactView.getPhoneNumber();
+				// check if the phone number is 10 digits and contains only numbers
+				if(phoneNumber.length() != 10 || !phoneNumber.matches("[0-9]+")) {
+					JOptionPane.showMessageDialog(null, "Phone number must be 10 digits and contain only numbers");
+					return;
+				}
+
 				contact.setPhoneNumber(contactView.getPhoneNumber());
 
 				ContactDataAccess contactData = new ContactDataAccess();
@@ -36,7 +43,7 @@ public class ContactController {
 					updateContactList();
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "An error occured");
+					JOptionPane.showMessageDialog(null, "An error occurred");
 				}
 			}
 		});
@@ -118,6 +125,7 @@ public class ContactController {
 
 		contactView.addExportButtonListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				updateContactList();
 				String filename = JOptionPane.showInputDialog("Enter filename");
 				String csvName = filename + ".csv";
 				if (Util.exportToCSV(csvName, new ContactDataAccess().getContacts())) {
