@@ -55,6 +55,7 @@ public class ContactController {
 					if(contact != null) {
 						updateFields(contact);
 					}
+
 				}
 			}
 		});
@@ -68,6 +69,11 @@ public class ContactController {
 				String fn = contactView.getFirstName();
 				String ln = contactView.getLastName();
 				String pn = contactView.getPhoneNumber();
+				if(pn.length() != 10 || !pn.matches("[0-9]+")) {
+					JOptionPane.showMessageDialog(null, "Phone number must be 10 digits and contain only numbers");
+					updateFields(contact);
+					return;
+				}
 
 				contact.setFirstName(fn);
 				contact.setLastName(ln);
@@ -152,10 +158,10 @@ public class ContactController {
 
 		if(row != -1) {
 			contact = new Contact();
-			contact.setId((int) contactView.getContactTable().getValueAt(row, 0));
-			contact.setFirstName((String) contactView.getContactTable().getValueAt(row, 1));
-			contact.setLastName((String) contactView.getContactTable().getValueAt(row, 2));
-			contact.setPhoneNumber((String) contactView.getContactTable().getValueAt(row, 3));
+			contact.setFirstName((String) contactView.getContactTable().getValueAt(row, 0));
+			contact.setLastName((String) contactView.getContactTable().getValueAt(row, 1));
+			contact.setPhoneNumber((String) contactView.getContactTable().getValueAt(row, 2));
+			contact.setId(Integer.parseInt((String) contactView.getContactTable().getModel().getValueAt(row, 3)));
 		}
 
 		return contact;
