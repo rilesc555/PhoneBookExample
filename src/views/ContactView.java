@@ -30,7 +30,6 @@ public class ContactView extends JFrame {
 				}
 			}
 		});
-		
 
 		// initialize the components
 		tableModel = new DefaultTableModel() {
@@ -38,9 +37,10 @@ public class ContactView extends JFrame {
 				return false;
 			}
 		};
+		tableModel.setColumnCount(4);
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number", "id"});
 
 		setContactTable(new JTable(tableModel));
-		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
 		contactTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		txtFirstname = new JTextField(20);
@@ -54,7 +54,6 @@ public class ContactView extends JFrame {
 		btnRefresh = new JButton("Refresh");
 		btnExport = new JButton("Export");
 		contactTable.setShowGrid(false);
-
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -75,7 +74,7 @@ public class ContactView extends JFrame {
 		JPanel listPanel = new JPanel();
 		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		listPanel.add(new JLabel("Contact list"));
-		listPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+//		listPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		listPanel.add(new JScrollPane(getContactTable()));
 
 		// buttons panel
@@ -172,12 +171,12 @@ public class ContactView extends JFrame {
 	public void setContactsToTableModel(List<Contact> contacts) {
 		
 		tableModel.setRowCount(0);
-		tableModel.setColumnCount(3);
-		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number"});
+		tableModel.setColumnCount(4);
+		tableModel.setColumnIdentifiers(new String[] {"First Name", "Last Name", "Phone Number", "id"});
 
 		//Add first name, last name and phone number to the list model. Each column is set number of characters wide
 		for(Contact c : contacts) {
-			tableModel.addRow(new String[] {c.getFirstName(), c.getLastName(), c.getPhoneNumber()});
+			tableModel.addRow(new String[] {c.getFirstName(), c.getLastName(), c.getPhoneNumber(), String.valueOf(c.getId())});
 		}
 	}
 

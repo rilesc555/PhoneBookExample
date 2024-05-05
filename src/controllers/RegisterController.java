@@ -1,6 +1,7 @@
 package controllers;
 
 import java.awt.event.*;
+import java.util.Objects;
 
 import javax.swing.JOptionPane;
 
@@ -22,6 +23,11 @@ public class RegisterController {
 				User user = new User();
 				user.setUsername(registerView.getUsername());
 				user.setPassword(registerView.getPassword());
+
+				if (!Objects.equals(registerView.getConfirmPassword(), registerView.getPassword())) {
+					JOptionPane.showMessageDialog(null, "Passwords do not match");
+					return;
+				}
 				
 				if(new UserDataAccess().registerUser(user)) {
 					JOptionPane.showMessageDialog(null, "Registered successfully. Returning to login page");

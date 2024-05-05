@@ -146,24 +146,26 @@ public class ContactController {
 		ContactDataAccess data = new ContactDataAccess();
 		
 		List<Contact> contacts = data.getContacts();
-			
+
 		contactView.setContactsToTableModel(contacts);
+		contactView.getContactTable().removeColumn(contactView.getContactTable().getColumnModel().getColumn(3));
+
 	}
 	
 	private Contact getSelectedContact() {
-		Contact contact = null;
+		Contact selectedContact = null;
 		
 		int row = contactView.getContactTable().getSelectedRow();
 
 		if(row != -1) {
-			contact = new Contact();
-			contact.setFirstName((String) contactView.getContactTable().getValueAt(row, 0));
-			contact.setLastName((String) contactView.getContactTable().getValueAt(row, 1));
-			contact.setPhoneNumber((String) contactView.getContactTable().getValueAt(row, 2));
-			contact.setId(Integer.parseInt((String) contactView.getContactTable().getModel().getValueAt(row, 3)));
+			selectedContact = new Contact();
+			selectedContact.setFirstName((String) contactView.getContactTable().getValueAt(row, 0));
+			selectedContact.setLastName((String) contactView.getContactTable().getValueAt(row, 1));
+			selectedContact.setPhoneNumber((String) contactView.getContactTable().getValueAt(row, 2));
+			selectedContact.setId(Integer.parseInt((String) contactView.getContactTable().getModel().getValueAt(row, 3)));
 		}
 
-		return contact;
+		return selectedContact;
 	}
 	
 	private void updateFields(Contact contact) {

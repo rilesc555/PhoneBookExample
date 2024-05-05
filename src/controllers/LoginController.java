@@ -35,8 +35,7 @@ public class LoginController {
 		
 		loginView.addLoginButtonListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				// JOptionPane.showMessageDialog(null, "Login successful");	
-				
+
 				UserDataAccess userData = new UserDataAccess();
 				
 				if(userData.loginUser(loginView.getUsername(), loginView.getPassword())) {
@@ -46,6 +45,8 @@ public class LoginController {
 					new ContactController(contactView);
 
 					contactView.setVisible(true);
+					loginView.dispose();
+
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Username or password does not match");
